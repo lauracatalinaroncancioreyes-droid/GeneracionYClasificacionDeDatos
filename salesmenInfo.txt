@@ -1,0 +1,5 @@
+CC;10000001;Vendedor1;Apellido1
+CC;10000002;Vendedor2;Apellido2
+CC;10000003;Vendedor3;Apellido3
+CC;10000004;Vendedor4;Apellido4
+CC;10000005;Vendedor5;Apellido5
