@@ -2,6 +2,8 @@ Conclusiones - Entrega 3
 ----------------------
 
 *Durante el desarrollo del proyecto se realizó un programa en Java que permite generar, procesar y clasificar datos relacionados con productos, vendedores y sus ventas. 
+*Se reforzaron conocimientos en programación orientada a manejo de archivos de texto y uso de estructuras de datos en Java. Además, se comprendió la importancia de escribir código claro, documentado y funcional sin interacción directa del usuario.
 *En esta tercera entrega se completó la documentación del código fuente usando los comentarios Javadoc, mejorando la claridad y legibilidad del programa. También se verificó la correcta generación de los reportes en formato CSV, confirmando el cumplimiento de lo solicitado en el módulo.
+*Los conocimientos pueden aplicarse en el ámbito profesional para la automatización de procesos, generación de reportes y análisis de información. Esto resulta útil en áreas administrativas e industriales donde se requiere eficiencia en el manejo de datos.
 *El proyecto permitió fortalecer conocimientos en estructuras de datos, lectura y escritura de archivos, organización de clases y uso de excepciones. Asímismo, a aplicar buenas prácticas de programación.
-*El resultado final es un sistema funcional, documentado y listo para futuras ampliaciones o integraciones.
+*Se presentaron desafíos al integrar las clases y manejar correctamente los archivos, especialmente al depurar errores de lectura y escritura. Sin embargo, el proceso permitió fortalecer la lógica de programación y la capacidad de resolución de problemas.
