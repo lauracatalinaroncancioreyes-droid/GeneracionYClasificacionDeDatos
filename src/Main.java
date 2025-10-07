@@ -1,11 +1,23 @@
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
+/**
+ * Clase principal del proyecto "Generación y Clasificación de Datos".
+ * <p>
+ * Esta clase lee los archivos de productos, vendedores y ventas, procesa la información 
+ * y genera reportes consolidados en formato CSV con:
+ * <ul>
+ *   <li>Ventas totales por vendedor</li>
+ *   <li>Productos más vendidos</li>
+ * </ul>
+ * 
+ * @author Catalina 
+ * @version 3.0
+ */
 public class Main {
 
-    // Clase auxiliar para Vendedor
+    /** Representa un vendedor con su información básica y total de ventas acumulado. */
     static class Vendedor {
         String tipoDoc;
         String numDoc;
@@ -13,40 +25,50 @@ public class Main {
         String apellidos;
         double totalVentas = 0;
 
+        /** @return nombre completo del vendedor */
         public String getNombreCompleto() {
             return nombres + " " + apellidos;
         }
     }
 
-    // Clase auxiliar para Producto
+    /** Representa un producto con su información básica y total de unidades vendidas. */
     static class Producto {
         String id;
         String nombre;
         double precio;
         int cantidadVendida = 0;
 
+        /** @return valor total vendido del producto */
         public double getTotalVendido() {
             return cantidadVendida * precio;
         }
     }
 
+    /**
+     * Método principal del programa.
+     * <p>
+     * Carga los archivos de entrada (productos, vendedores y ventas),
+     * procesa los datos y genera los reportes solicitados.
+     *
+     * @param args argumentos de línea de comandos (no utilizados)
+     */
     public static void main(String[] args) {
         try {
-            // 📌 Rutas de los archivos (ajustadas a tu proyecto)
-            String carpetaDatos = "./"; // raíz del proyecto
+            // 📂 Directorio base del proyecto
+            String carpetaDatos = "./";
             String archivoVendedores = carpetaDatos + "salesmenInfo.txt";
             String archivoProductos = carpetaDatos + "productos.txt";
 
-            // Cargar vendedores y productos
+            // Cargar información de vendedores y productos
             Map<String, Vendedor> vendedores = cargarVendedores(archivoVendedores);
             Map<String, Producto> productos = cargarProductos(archivoProductos);
 
-            // Procesar archivos de ventas (todos los que empiezan por "ventas_")
+            // Procesar archivos de ventas (ventas_vendedorX.txt)
             Files.list(Paths.get(carpetaDatos))
                     .filter(path -> path.getFileName().toString().startsWith("ventas_"))
                     .forEach(path -> procesarVentas(path.toFile(), vendedores, productos));
 
-            // Generar reportes
+            // Generar reportes de salida
             generarReporteVendedores(vendedores, carpetaDatos + "ReporteVendedores.csv");
             generarReporteProductos(productos, carpetaDatos + "ReporteProductos.csv");
 
@@ -58,7 +80,13 @@ public class Main {
         }
     }
 
-    // 📌 Cargar archivo de vendedores
+    /**
+     * Carga la información de los vendedores desde un archivo.
+     *
+     * @param ruta ruta del archivo de vendedores
+     * @return mapa de vendedores indexado por tipo y número de documento
+     * @throws IOException si ocurre un error al leer el archivo
+     */
     private static Map<String, Vendedor> cargarVendedores(String ruta) throws IOException {
         Map<String, Vendedor> vendedores = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
@@ -73,12 +101,18 @@ public class Main {
                     v.apellidos = partes[3];
                     vendedores.put(v.tipoDoc + ";" + v.numDoc, v);
                 }
-            }s
+            }
         }
         return vendedores;
     }
 
-    // 📌 Cargar archivo de productos
+    /**
+     * Carga la información de los productos desde un archivo.
+     *
+     * @param ruta ruta del archivo de productos
+     * @return mapa de productos indexado por ID de producto
+     * @throws IOException si ocurre un error al leer el archivo
+     */
     private static Map<String, Producto> cargarProductos(String ruta) throws IOException {
         Map<String, Producto> productos = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
@@ -97,10 +131,19 @@ public class Main {
         return productos;
     }
 
-    // 📌 Procesar ventas de un archivo
+    /**
+     * Procesa un archivo de ventas de un vendedor específico.
+     * <p>
+     * Cada archivo comienza con la información del vendedor, seguida de las líneas
+     * con ID de producto y cantidad vendida.
+     *
+     * @param archivo    archivo de ventas
+     * @param vendedores mapa de vendedores
+     * @param productos  mapa de productos
+     */
     private static void procesarVentas(File archivo, Map<String, Vendedor> vendedores, Map<String, Producto> productos) {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-            String vendedorLinea = br.readLine(); // primera línea = vendedor
+            String vendedorLinea = br.readLine(); // primera línea = datos del vendedor
             if (vendedorLinea == null) return;
 
             String[] datosVendedor = vendedorLinea.split(";");
@@ -129,7 +172,13 @@ public class Main {
         }
     }
 
-    // 📌 Generar reporte de vendedores
+    /**
+     * Genera un reporte con la información de los vendedores y sus ventas totales.
+     *
+     * @param vendedores mapa de vendedores
+     * @param salida     ruta del archivo CSV de salida
+     * @throws IOException si ocurre un error al escribir el archivo
+     */
     private static void generarReporteVendedores(Map<String, Vendedor> vendedores, String salida) throws IOException {
         List<Vendedor> lista = new ArrayList<>(vendedores.values());
         lista.sort((a, b) -> Double.compare(b.totalVentas, a.totalVentas));
@@ -141,7 +190,13 @@ public class Main {
         }
     }
 
-    // 📌 Generar reporte de productos
+    /**
+     * Genera un reporte con los productos más vendidos.
+     *
+     * @param productos mapa de productos
+     * @param salida    ruta del archivo CSV de salida
+     * @throws IOException si ocurre un error al escribir el archivo
+     */
     private static void generarReporteProductos(Map<String, Producto> productos, String salida) throws IOException {
         List<Producto> lista = new ArrayList<>(productos.values());
         lista.sort((a, b) -> Integer.compare(b.cantidadVendida, a.cantidadVendida));
